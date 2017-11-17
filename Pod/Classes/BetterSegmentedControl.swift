@@ -225,12 +225,38 @@ import UIKit
             titleLabels.forEach { $0.font = titleFont }
         }
     }
+	
+	/// title fonts for segments
+	/// changed by cgi
+	public var titleFonts: [UIFont] = [UILabel().font] {
+		didSet {
+			if !titleLabels.isEmpty && titleLabels.count == titleFonts.count {
+				for (index, font) in titleFonts.enumerated() {
+					titleLabels[index].font = font
+				}
+			}
+		}
+	}
+	
     /// The selected title's font
     public var selectedTitleFont: UIFont = UILabel().font {
         didSet {
             selectedTitleLabels.forEach { $0.font = selectedTitleFont }
         }
     }
+	
+	/// selected title fonts for segments
+	/// changed by cgi
+	public var selectedTitleFonts: [UIFont] = [UILabel().font] {
+		didSet {
+			if !selectedTitleLabels.isEmpty && selectedTitleLabels.count == selectedTitleFonts.count {
+				for (index, font) in selectedTitleFonts.enumerated() {
+					selectedTitleLabels[index].font = font
+				}
+			}
+		}
+	}
+	
     /// The titles' border width
     @IBInspectable public fileprivate(set) var titleBorderWidth: CGFloat = 0.0 {
         didSet {
@@ -357,6 +383,29 @@ import UIKit
         moveIndicatorViewToIndex(animated, shouldSendEvent: (self.index != oldIndex || alwaysAnnouncesValue))
     }
 
+	
+	/// needed width for titles
+	/// changed by awe
+	/*!
+	- parameter titleInset: left / right space of title to next segment
+	*/
+	public func neededWidth(titleInset: CGFloat) -> CGFloat {
+		
+		var width = CGFloat(0)
+		
+		self.titleLabels.forEach { (lbl) in
+			width += lbl.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: lbl.bounds.size.height)).width
+		}
+		self.selectedTitleLabels.forEach { (lbl) in
+			width += lbl.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: lbl.bounds.size.height)).width
+		}
+		
+		width += CGFloat(self.titles.count * 2) * titleInset
+		
+		return width
+	}
+	
+	
     // MARK: Indicator View Customization
 
     /**
