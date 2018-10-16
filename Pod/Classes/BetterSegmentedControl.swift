@@ -291,6 +291,34 @@ import Foundation
         indicatorView.addSubview(view)
     }
     
+    /// needed width for titles
+    /// changed by awe
+    ///
+    /// Parameter titleInset: left / right space of title to next segment
+    public func neededWidthForLabelSegments(titleInset: CGFloat) -> CGFloat? {
+        
+        var width = CGFloat(0)
+        
+        guard let normalLabelSegments = normalSegments as? [UILabel],
+            let selectedLabelSegments = selectedSegments as? [UILabel] else {
+                return nil
+        }
+        
+        normalLabelSegments.forEach { (lbl) in
+            width += lbl.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: lbl.bounds.size.height)).width
+        }
+        selectedLabelSegments.forEach { (lbl) in
+            width += lbl.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: lbl.bounds.size.height)).width
+        }
+        
+        let itemCount = normalSegments.count + selectedLabelSegments.count
+        width += CGFloat(itemCount * 2) * titleInset
+        
+        return width
+    }
+    
+
+    
     // MARK: Animations
     private func moveIndicatorViewToIndex(_ animated: Bool, shouldSendEvent: Bool) {
         if animated {
